@@ -2,6 +2,8 @@ package br.com.danilo.forum.controller;
 
 import br.com.danilo.forum.controller.dto.TopicoDto;
 import br.com.danilo.forum.modelo.*;
+import br.com.danilo.forum.repository.TopicoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,16 +13,18 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/topicos")
 public class TopicosController {
 
-    @GetMapping()
-    public List<TopicoDto> list(){
+    @Autowired
+    private TopicoRepository topicoRepository;
 
-        Topico topico = new Topico("titulo","mensagem",new Curso("Nome","Categoria"));
+    @RequestMapping("/topicos")
+    public List<TopicoDto> list(String nomeCurso){
 
-        List<Topico> topicos = Arrays.asList(topico,topico);
-
-   return TopicoDto.converter(topicos);
+        if(nomeCurso == null)
+         return TopicoDto.converter(topicoRepository.findAll());
+        else {
+          return TopicoDto.converter(topicoRepository.findByCurso_Nome(nomeCurso));
+        }
     }
 }
