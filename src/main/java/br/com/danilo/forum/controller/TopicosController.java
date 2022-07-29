@@ -9,6 +9,9 @@ import br.com.danilo.forum.repository.CursoRepository;
 import br.com.danilo.forum.repository.TopicoRepository;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,12 +36,20 @@ public class TopicosController {
 
 
     @GetMapping()
-    public List<TopicoDto> list(String nomeCurso){
+    public Page<TopicoDto> list(@RequestParam(required = false) String nomeCurso,
+                                @RequestParam(required = true)  int pagina,
+                                @RequestParam(required = true) int qtd)
+    {
+        Pageable paginacao = PageRequest.of(pagina, qtd);
 
-        if(nomeCurso == null)
-         return TopicoDto.converter(topicoRepository.findAll());
+        if(nomeCurso == null) {
+
+            Page<Topico> t = this.topicoRepository.findAll(paginacao);
+
+            return TopicoDto.converter(t);
+        }
         else {
-          return TopicoDto.converter(topicoRepository.findByCurso_Nome(nomeCurso));
+          return TopicoDto.converter(topicoRepository.findByCurso_Nome(nomeCurso, paginacao));
         }
     }
     @PostMapping()
