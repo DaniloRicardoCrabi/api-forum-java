@@ -38,16 +38,11 @@ public class TopicosController {
 
     @GetMapping()
     public Page<TopicoDto> list(@RequestParam(required = false) String nomeCurso,
-                                @RequestParam(required = true)  int pagina,
-                                @RequestParam(required = true) int qtd,
-                                @RequestParam(required = false) String ordernacao)
+                               Pageable paginacao)
     {
-        Pageable paginacao = PageRequest.of(pagina, qtd, Sort.Direction.ASC, ordernacao);
 
         if(nomeCurso == null) {
-
             Page<Topico> t = this.topicoRepository.findAll(paginacao);
-
             return TopicoDto.converter(t);
         }
         else {
