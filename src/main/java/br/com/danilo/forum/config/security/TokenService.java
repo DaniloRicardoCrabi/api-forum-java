@@ -39,8 +39,6 @@ public class TokenService {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
 
-
-
     }
 
     public boolean isTokenValido(String token) {
@@ -50,7 +48,6 @@ public class TokenService {
         } catch (Exception e) {
             return false;
         }
-
     }
 
     public Long getIdUsuario(String token) {
